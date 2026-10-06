@@ -1,234 +1,227 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { cuisines, english } from "./cuisines";
-import type { Category, CuisineId, Language } from "./cuisines";
+import { MenuPage } from "./pages/MenuPage";
 import "./App.css";
 
-const categories: Category[] = ["mains", "sides", "drinks"];
+function getPage() {
+  return window.location.hash === "#/menu" ? "menu" : "home";
+}
 
 export default function App() {
-  const [cuisineId, setCuisineId] = useState<CuisineId>("turkish");
-  const [language, setLanguage] = useState<Language>("en");
-  const [category, setCategory] = useState<Category>("mains");
-
+  const [page, setPage] = useState(getPage);
+  const [language, setLanguage] = useState<"en" | "tr">("en");
   const drawer = useRef<HTMLDialogElement>(null);
-  const cuisine = cuisines[cuisineId];
-  const labels = language === "en" ? english : cuisine.labels;
 
-  const dishes = cuisine.dishes.filter(
-    (dish) => dish.category === category,
-  );
+  const text =
+    language === "en"
+      ? {
+          subtitle: "Authentic Turkish Restaurant",
+          home: "Home",
+          menu: "Our menu",
+          headline: "A warm welcome. A Turkish table.",
+          description:
+            "Charcoal-grilled favourites, generous meze and the pleasure of sharing a good meal.",
+          explore: "Explore our menu",
+          storyTitle: "A little taste of our story",
+          story:
+            "Inspired by the welcoming tables of Turkey, Barış Restaurant brings people together through food made for sharing.",
+          open: "Open navigation",
+          close: "Close navigation",
+          language: "Language",
+          rights: "All rights reserved.",
+          demo: "A fictional restaurant created for the Table & Taste portfolio project.",
+        }
+      : {
+          subtitle: "Otantik Türk Restoranı",
+          home: "Ana sayfa",
+          menu: "Menümüz",
+          headline: "Sıcak bir karşılama. Bir Türk sofrası.",
+          description:
+            "Kömür ateşinden lezzetler, zengin mezeler ve güzel bir yemeği paylaşmanın keyfi.",
+          explore: "Menümüzü keşfet",
+          storyTitle: "Hikâyemizden bir tat",
+          story:
+            "Türkiye'nin misafirperver sofralarından ilham alan Barış Restaurant, paylaşmak için hazırlanan yemeklerle insanları buluşturur.",
+          open: "Gezinmeyi aç",
+          close: "Gezinmeyi kapat",
+          language: "Dil",
+          rights: "Tüm hakları saklıdır.",
+          demo: "Table & Taste portföy projesi için oluşturulmuş kurgusal bir restorandır.",
+        };
 
-  const price = new Intl.NumberFormat(
-    language === "en" ? "en-GB" : language,
-    { style: "currency", currency: "GBP" },
-  );
+  useEffect(() => {
+    function handleNavigation() {
+      setPage(getPage());
+      drawer.current?.close();
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    window.addEventListener("hashchange", handleNavigation);
+
+    return () => {
+      window.removeEventListener("hashchange", handleNavigation);
+    };
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = language;
-  }, [language]);
+    document.title =
+      page === "menu"
+        ? `${text.menu} | Barış Restaurant`
+        : "Barış Restaurant | Table & Taste";
+  }, [language, page, text.menu]);
 
-  function changeCuisine(next: CuisineId) {
-    setCuisineId(next);
-    setLanguage("en");
-    setCategory("mains");
-  }
+  const theme = {
+    "--accent": "#e4b88b",
+    "--background": "#1a1012",
+    "--surface": "#2a1a1e",
+  } as CSSProperties;
 
   function closeNavigation() {
     drawer.current?.close();
   }
 
-  const theme = {
-    "--accent": cuisine.accent,
-    "--background": cuisine.background,
-    "--surface": cuisine.surface,
-  } as CSSProperties;
-
-  const navigation = [
-    { href: "#menu", text: labels.menu },
-    { href: "#reservation", text: labels.reservation },
-    { href: "#about", text: labels.about },
-    { href: "#contact", text: labels.contact },
+  const links = [
+    { href: "#/", label: text.home },
+    { href: "#/menu", label: text.menu },
   ];
 
   return (
     <div className="app" style={theme}>
       <header className="header">
-        <a className="brand" href="#home" aria-label="Table & Taste">
-          <span className="brand-mark" aria-hidden="true">T&T</span>
-          <span>Table <span className="amp">&</span> Taste</span>
+        <a className="restaurant-brand" href="#/">
+          <span className="brand-mark" aria-hidden="true">B</span>
+
+          <span>
+            <strong>Barış Restaurant</strong>
+            <small>{text.subtitle}</small>
+          </span>
         </a>
 
-        <nav className="desktop-nav" aria-label={labels.menu}>
-          {navigation.map((link) => (
-            <a key={link.href} href={link.href}>{link.text}</a>
+        <nav className="desktop-nav" aria-label={text.open}>
+          {links.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              aria-current={
+                (page === "home" && link.href === "#/") ||
+                (page === "menu" && link.href === "#/menu")
+                  ? "page"
+                  : undefined
+              }
+            >
+              {link.label}
+            </a>
           ))}
         </nav>
 
-        <button
-          className="menu-button"
-          onClick={() => drawer.current?.showModal()}
-          aria-label={labels.navigation}
-          aria-haspopup="dialog"
-          aria-controls="navigation-drawer"
-        >
-          <span aria-hidden="true">☰</span>
-        </button>
+        <div className="header-controls">
+          <select
+            className="header-language"
+            aria-label={text.language}
+            value={language}
+            onChange={(event) =>
+              setLanguage(event.target.value as "en" | "tr")
+            }
+          >
+            <option value="en">EN</option>
+            <option value="tr">TR</option>
+          </select>
+
+          <button
+            className="menu-button"
+            aria-label={text.open}
+            aria-haspopup="dialog"
+            aria-controls="restaurant-navigation"
+            onClick={() => drawer.current?.showModal()}
+          >
+            <span aria-hidden="true">☰</span>
+          </button>
+        </div>
       </header>
 
       <dialog
-        id="navigation-drawer"
-        className="drawer"
         ref={drawer}
-        aria-label={labels.navigation}
+        id="restaurant-navigation"
+        className="drawer"
+        aria-label={text.open}
         onClick={(event) => {
-          if (event.target === event.currentTarget) closeNavigation();
+          if (event.target === event.currentTarget) {
+            closeNavigation();
+          }
         }}
       >
         <div className="drawer-content">
           <button
             className="close-button"
+            aria-label={text.close}
             onClick={closeNavigation}
-            aria-label={labels.close}
             autoFocus
           >
             ×
           </button>
 
-          <p className="drawer-brand">Table & Taste</p>
+          <p className="drawer-brand">Barış Restaurant</p>
 
-          <nav aria-label={labels.menu}>
-            {navigation.map((link) => (
+          <nav aria-label={text.open}>
+            {links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={closeNavigation}
               >
-                {link.text}
+                {link.label}
               </a>
             ))}
           </nav>
         </div>
       </dialog>
 
-      <main>
-        <section id="home" className="hero">
-          <div className="preferences">
-            <label>
-              <span>{labels.cuisine}</span>
-              <select
-                value={cuisineId}
-                onChange={(event) =>
-                  changeCuisine(event.target.value as CuisineId)
-                }
-              >
-                {(Object.keys(cuisines) as CuisineId[]).map((id) => (
-                  <option key={id} value={id}>
-                    {cuisines[id].name}
-                  </option>
-                ))}
-              </select>
-            </label>
+      {page === "menu" ? (
+        <MenuPage language={language} />
+      ) : (
+        <main>
+          <section className="restaurant-home-hero">
+            <p className="eyebrow">{text.subtitle}</p>
+            <h1>{text.headline}</h1>
+            <p className="restaurant-home-description">
+              {text.description}
+            </p>
 
-            <label>
-              <span>{labels.language}</span>
-              <select
-                value={language}
-                onChange={(event) =>
-                  setLanguage(event.target.value as Language)
-                }
-              >
-                <option value="en">English</option>
-                <option value={cuisine.language}>
-                  {cuisine.languageName}
-                </option>
-              </select>
-            </label>
+            <a className="primary-button" href="#/menu">
+              {text.explore}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </section>
+
+          <section className="section information">
+            <h2>{text.storyTitle}</h2>
+            <p>{text.story}</p>
+          </section>
+        </main>
+      )}
+
+      <footer className="restaurant-footer">
+        <div className="restaurant-footer-top">
+          <div>
+            <strong>Barış Restaurant</strong>
+            <p>{text.subtitle}</p>
           </div>
 
-          <div className="hero-layout">
-            <div className="hero-copy">
-              <p className="eyebrow">TABLE & TASTE</p>
-              <h1>{labels.headline}</h1>
-              <p className="intro">{labels.intro}</p>
-              <a className="primary-button" href="#menu">
-                {labels.explore} <span aria-hidden="true">↗</span>
-              </a>
-            </div>
+          <nav aria-label={text.menu}>
+            <a href="#/">{text.home}</a>
+            <a href="#/menu">{text.menu}</a>
+          </nav>
+        </div>
 
-            <div className="hero-art" aria-hidden="true">
-              <div className="orbit" />
-              <div className="plate">
-                <span className="hero-food">{cuisine.hero}</span>
-              </div>
-              <span className="art-caption">{cuisine.name}</span>
-            </div>
-          </div>
-        </section>
-
-        <section id="menu" className="section">
-          <div className="section-heading">
-            <h2>{labels.menu}</h2>
-            <span>{cuisine.name}</span>
-          </div>
-
-          <div className="categories" role="group" aria-label={labels.menu}>
-            {categories.map((item) => (
-              <button
-                key={item}
-                aria-pressed={category === item}
-                onClick={() => setCategory(item)}
-              >
-                {labels[item]}
-              </button>
-            ))}
-          </div>
-
-          <div className="dish-grid">
-            {dishes.map((dish) => (
-              <article className="dish-card" key={dish.id}>
-                <div
-                  className={`dish-art ${dish.category === "drinks" ? "drink" : ""}`}
-                  aria-hidden="true"
-                >
-                  <span>{dish.visual}</span>
-                </div>
-
-                <div className="dish-heading">
-                  <h3>
-                    {language === "en" ? dish.name.en : dish.name.local}
-                  </h3>
-                  <span className="price">{price.format(dish.price)}</span>
-                </div>
-
-                <p>
-                  {language === "en"
-                    ? dish.description.en
-                    : dish.description.local}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="about" className="section information">
-          <h2>{labels.about}</h2>
-          <p>{labels.aboutText}</p>
-        </section>
-
-        <section id="reservation" className="section information">
-          <h2>{labels.reservation}</h2>
-          <p>{labels.contactText}</p>
-          <p className="coming-soon">{labels.request}</p>
-        </section>
-
-        <section id="contact" className="section information">
-          <h2>{labels.contact}</h2>
-          <p>{labels.contactText}</p>
-        </section>
-      </main>
-
-      <footer>© {new Date().getFullYear()} Table & Taste</footer>
+        <div className="restaurant-footer-bottom">
+          <p>
+            © {new Date().getFullYear()} Barış Restaurant.
+            {" "}{text.rights}
+          </p>
+          <p>{text.demo}</p>
+        </div>
+      </footer>
     </div>
   );
 }
