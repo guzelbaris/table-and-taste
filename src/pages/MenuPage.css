@@ -247,3 +247,51 @@
     animation: none;
   }
 }
+
+/* Mobilde bütün ürünler sırasıyla tek sütunda. */
+
+.menu-products {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.menu-product-column {
+  display: contents;
+}
+
+.menu-product-entry {
+  min-width: 0;
+}
+
+/* Her iki kart için açılma animasyonu. */
+
+.menu-card--pro .menu-feature-details:not([hidden]),
+.menu-card--plus .menu-feature-details:not([hidden]) {
+  animation: menu-details-enter 220ms ease-out;
+}
+
+/* Masaüstünde bağımsız iki sütun:
+   bir kartın yüksekliği diğer sütunda boşluk oluşturmaz. */
+
+@media (min-width: 768px) {
+  .menu-products {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 22px;
+  }
+
+  .menu-product-column {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-card--pro .menu-feature-details:not([hidden]),
+  .menu-card--plus .menu-feature-details:not([hidden]) {
+    animation: none;
+  }
+}

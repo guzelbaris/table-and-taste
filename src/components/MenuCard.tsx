@@ -52,9 +52,7 @@ export function MenuCard({
 
   const details = (
     <>
-      <p className="menu-card-description">
-        {item.description[language]}
-      </p>
+
 
       {presentation && (
         <div className="menu-card-ingredients">
@@ -94,9 +92,13 @@ export function MenuCard({
       </div>
 
       <div className="menu-feature-copy">
-        {heading}
+  {heading}
 
-        {isPro && (
+  <p className="menu-card-description">
+    {item.description[language]}
+  </p>
+
+        {presentation  && (
           <span className="menu-card-hint">
             {expanded ? text.close : text.open}
 
@@ -109,44 +111,39 @@ export function MenuCard({
     </div>
   ) : null;
 
-  return (
-    <article className={`menu-card menu-card--${variant}`}>
-      {isPro ? (
-        <>
-          <button
-            className="menu-card-toggle"
-            type="button"
-            aria-expanded={expanded}
-            aria-controls={detailsId}
-            onClick={() => setExpanded((current) => !current)}
-          >
-            {summary}
-          </button>
+return (
+  <article className={`menu-card menu-card--${variant}`}>
+    {presentation ? (
+      <>
+        <button
+          className="menu-card-toggle"
+          type="button"
+          aria-expanded={expanded}
+          aria-controls={detailsId}
+          onClick={() => setExpanded((current) => !current)}
+        >
+          {summary}
+        </button>
 
-          <div
-            id={detailsId}
-            className="menu-feature-details"
-            hidden={!expanded}
-          >
-            {details}
-          </div>
-        </>
-      ) : presentation ? (
-        <>
-          <div className="menu-feature-header">
-            {summary}
-          </div>
-
-          <div className="menu-feature-details">
-            {details}
-          </div>
-        </>
-      ) : (
-        <div className="menu-card-body">
-          {heading}
+        <div
+          id={detailsId}
+          className="menu-feature-details"
+          hidden={!expanded}
+        >
           {details}
         </div>
-      )}
-    </article>
-  );
+      </>
+    ) : (
+  <div className="menu-card-body">
+    {heading}
+
+    <p className="menu-card-description">
+      {item.description[language]}
+    </p>
+
+    {details}
+  </div>
+)}
+  </article>
+);
 }

@@ -10,6 +10,7 @@ export function HomePage({ language }: HomePageProps) {
     language === "en"
       ? {
           eyebrow: "AUTHENTIC TURKISH RESTAURANT",
+          reservation: "Make a reservation",
           headline: "Good food.\nWarm company.",
           introduction:
             "Gather around our table for generous meze, charcoal-grilled favourites and a little Turkish hospitality.",
@@ -130,6 +131,9 @@ export function HomePage({ language }: HomePageProps) {
               {text.menu}
               <span aria-hidden="true">↗</span>
             </a>
+            <a className="home-text-link" href="#/reservation">
+  {text.reservation}
+</a>
 
             <a className="home-text-link" href="#our-story">
               {text.storyLink}

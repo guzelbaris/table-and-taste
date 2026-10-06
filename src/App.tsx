@@ -1,15 +1,35 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { MenuPage } from "./pages/MenuPage";
 import { HomePage } from "./pages/HomePage";
+import { MenuPage } from "./pages/MenuPage";
+import { cuisines } from "./cuisines";
+import type { CuisineId } from "./cuisines";
+import { ReservationPage } from "./pages/ReservationPage";
+import { AboutPage } from "./pages/AboutPage";
+import { ContactPage } from "./pages/ContactPage";
 import "./App.css";
+import "./pages/InformationPages.css";
 
-function getPage() {
-  return window.location.hash === "#/menu" ? "menu" : "home";
+type Page = "home" | "menu" | "reservation" | "about" | "contact";
+
+function getPage(): Page {
+  switch (window.location.hash) {
+    case "#/menu":
+      return "menu";
+    case "#/reservation":
+      return "reservation";
+    case "#/about":
+      return "about";
+    case "#/contact":
+      return "contact";
+    default:
+      return "home";
+  }
 }
 
 export default function App() {
-  const [page, setPage] = useState(getPage);
+  const [page, setPage] = useState<Page>(getPage);
+  const [themeId, setThemeId] = useState<CuisineId>("turkish");
   const [language, setLanguage] = useState<"en" | "tr">("en");
   const drawer = useRef<HTMLDialogElement>(null);
 
@@ -19,42 +39,76 @@ export default function App() {
           subtitle: "Authentic Turkish Restaurant",
           home: "Home",
           menu: "Our menu",
-          headline: "A warm welcome. A Turkish table.",
-          description:
-            "Charcoal-grilled favourites, generous meze and the pleasure of sharing a good meal.",
-          explore: "Explore our menu",
-          storyTitle: "A little taste of our story",
-          story:
-            "Inspired by the welcoming tables of Turkey, Barış Restaurant brings people together through food made for sharing.",
+          reservation: "Make a reservation",
+          about: "About us",
+          contact: "Contact",
           open: "Open navigation",
           close: "Close navigation",
           language: "Language",
+          explore: "Explore",
+          hours: "Sample opening hours",
+          weekdays: "Mon – Thu",
+          weekend: "Fri – Sat",
+          sunday: "Sun",
+          footerDescription:
+            "Turkish flavours, warm hospitality and a table made for sharing.",
           rights: "All rights reserved.",
-          demo: "A fictional restaurant created for the Table & Taste portfolio project.",
+          demo:
+            "A fictional restaurant for the Table & Taste portfolio project. Forms and reservations are demonstrations.",
         }
       : {
           subtitle: "Otantik Türk Restoranı",
           home: "Ana sayfa",
           menu: "Menümüz",
-          headline: "Sıcak bir karşılama. Bir Türk sofrası.",
-          description:
-            "Kömür ateşinden lezzetler, zengin mezeler ve güzel bir yemeği paylaşmanın keyfi.",
-          explore: "Menümüzü keşfet",
-          storyTitle: "Hikâyemizden bir tat",
-          story:
-            "Türkiye'nin misafirperver sofralarından ilham alan Barış Restaurant, paylaşmak için hazırlanan yemeklerle insanları buluşturur.",
+          reservation: "Rezervasyon yap",
+          about: "Hakkımızda",
+          contact: "İletişim",
           open: "Gezinmeyi aç",
           close: "Gezinmeyi kapat",
           language: "Dil",
+          explore: "Keşfet",
+          hours: "Örnek çalışma saatleri",
+          weekdays: "Pzt – Per",
+          weekend: "Cum – Cmt",
+          sunday: "Paz",
+          footerDescription:
+            "Türk lezzetleri, sıcak misafirperverlik ve paylaşmak için hazırlanmış bir sofra.",
           rights: "Tüm hakları saklıdır.",
-          demo: "Table & Taste portföy projesi için oluşturulmuş kurgusal bir restorandır.",
+          demo:
+            "Table & Taste portföy projesi için kurgusal restorandır. Formlar ve rezervasyonlar demo amaçlıdır.",
         };
+
+  const links: { href: string; label: string; page: Page }[] = [
+    { href: "#/", label: text.home, page: "home" },
+    { href: "#/menu", label: text.menu, page: "menu" },
+    { href: "#/about", label: text.about, page: "about" },
+    {
+      href: "#/reservation",
+      label: text.reservation,
+      page: "reservation",
+    },
+    { href: "#/contact", label: text.contact, page: "contact" },
+  ];
 
   useEffect(() => {
     function handleNavigation() {
       setPage(getPage());
       drawer.current?.close();
-      window.scrollTo({ top: 0, behavior: "instant" });
+
+      // Ana sayfadaki hikâye bağlantısını da destekler.
+      if (window.location.hash === "#our-story") {
+        requestAnimationFrame(() => {
+          document.getElementById("our-story")?.scrollIntoView({
+            behavior: window.matchMedia(
+              "(prefers-reduced-motion: reduce)",
+            ).matches
+              ? "instant"
+              : "smooth",
+          });
+        });
+      } else {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
     }
 
     window.addEventListener("hashchange", handleNavigation);
@@ -64,82 +118,140 @@ export default function App() {
     };
   }, []);
 
+  const pageTitle = text[page];
+
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title =
-      page === "menu"
-        ? `${text.menu} | Barış Restaurant`
-        : "Barış Restaurant | Table & Taste";
-  }, [language, page, text.menu]);
+    document.title = `${pageTitle} | Barış Restaurant`;
+  }, [language, pageTitle]);
 
-  const theme = {
-    "--accent": "#e4b88b",
-    "--background": "#1a1012",
-    "--surface": "#2a1a1e",
-  } as CSSProperties;
+  const selectedTheme = cuisines[themeId];
+
+const theme = {
+  "--accent": selectedTheme.accent,
+  "--background": selectedTheme.background,
+  "--surface": selectedTheme.surface,
+} as CSSProperties;
+const themeLabels: Record<CuisineId, string> =
+  language === "en"
+    ? {
+        turkish: "Terracotta",
+        italian: "Olive",
+        greek: "Aegean",
+        mexican: "Amber",
+        japanese: "Sakura",
+      }
+    : {
+        turkish: "Terrakota",
+        italian: "Zeytin",
+        greek: "Ege",
+        mexican: "Kehribar",
+        japanese: "Sakura",
+      };
 
   function closeNavigation() {
     drawer.current?.close();
   }
 
-  const links = [
-    { href: "#/", label: text.home },
-    { href: "#/menu", label: text.menu },
-  ];
-
   return (
     <div className="app" style={theme}>
-      <header className="header">
-        <a className="restaurant-brand" href="#/">
-          <span className="brand-mark" aria-hidden="true">B</span>
+      <header className="premium-header">
+  <div className="premium-header-main">
+    <a className="premium-brand" href="#/">
+      <img
+        className="premium-brand-logo"
+        src={`${import.meta.env.BASE_URL}images/brand/baris-logo.png`}
+        alt=""
+        width={56}
+        height={56}
+      />
 
-          <span>
-            <strong>Barış Restaurant</strong>
-            <small>{text.subtitle}</small>
-          </span>
-        </a>
+      <span className="premium-brand-copy">
+        <strong>Barış Restaurant</strong>
+        <small>{text.subtitle}</small>
+      </span>
+    </a>
 
-        <nav className="desktop-nav" aria-label={text.open}>
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              aria-current={
-                (page === "home" && link.href === "#/") ||
-                (page === "menu" && link.href === "#/menu")
-                  ? "page"
-                  : undefined
-              }
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="header-controls">
-          <select
-            className="header-language"
-            aria-label={text.language}
-            value={language}
-            onChange={(event) =>
-              setLanguage(event.target.value as "en" | "tr")
-            }
+    <nav
+      className="premium-navigation"
+      aria-label={text.explore}
+    >
+      {links
+        .filter((link) => link.page !== "reservation")
+        .map((link) => (
+          <a
+            key={link.href}
+            href={link.href}
+            aria-current={page === link.page ? "page" : undefined}
           >
-            <option value="en">EN</option>
-            <option value="tr">TR</option>
-          </select>
+            {link.label}
+          </a>
+        ))}
+    </nav>
 
-          <button
-            className="menu-button"
-            aria-label={text.open}
-            aria-haspopup="dialog"
-            aria-controls="restaurant-navigation"
-            onClick={() => drawer.current?.showModal()}
-          >
-            <span aria-hidden="true">☰</span>
-          </button>
-        </div>
-      </header>
+    <div className="premium-header-actions">
+      <a
+        className="premium-reservation-link"
+        href="#/reservation"
+      >
+        {text.reservation}
+        <span aria-hidden="true">↗</span>
+      </a>
+
+      <select
+        className="premium-language"
+        aria-label={text.language}
+        value={language}
+        onChange={(event) =>
+          setLanguage(event.target.value as "en" | "tr")
+        }
+      >
+        <option value="en">EN</option>
+        <option value="tr">TR</option>
+      </select>
+
+      <button
+        className="premium-menu-button"
+        aria-label={text.open}
+        aria-haspopup="dialog"
+        aria-controls="restaurant-navigation"
+        onClick={() => drawer.current?.showModal()}
+      >
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+      </button>
+    </div>
+  </div>
+
+  <div className="premium-theme-bar">
+    <span className="premium-theme-caption">
+      TABLE & TASTE
+    </span>
+
+    <label className="premium-theme-picker">
+      <span>{language === "en" ? "Colour palette" : "Renk paleti"}</span>
+
+      <span
+        className="premium-theme-dot"
+        aria-hidden="true"
+      />
+
+      <select
+        value={themeId}
+        onChange={(event) =>
+          setThemeId(event.target.value as CuisineId)
+        }
+      >
+        {(Object.keys(cuisines) as CuisineId[]).map((id) => (
+          <option key={id} value={id}>
+            {themeLabels[id]}
+          </option>
+        ))}
+      </select>
+    </label>
+  </div>
+</header>
 
       <dialog
         ref={drawer}
@@ -164,11 +276,12 @@ export default function App() {
 
           <p className="drawer-brand">Barış Restaurant</p>
 
-          <nav aria-label={text.open}>
+          <nav aria-label={text.explore}>
             {links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
+                aria-current={page === link.page ? "page" : undefined}
                 onClick={closeNavigation}
               >
                 {link.label}
@@ -180,24 +293,49 @@ export default function App() {
 
       {page === "menu" ? (
         <MenuPage language={language} />
+      ) : page === "reservation" ? (
+        <ReservationPage language={language} />
+      ) : page === "about" ? (
+        <AboutPage language={language} />
+      ) : page === "contact" ? (
+        <ContactPage language={language} />
       ) : (
         <HomePage language={language} />
       )}
 
-      <footer className="restaurant-footer">
-        <div className="restaurant-footer-top">
+      <footer className="site-footer">
+        <div className="site-footer-content">
           <div>
-            <strong>Barış Restaurant</strong>
-            <p>{text.subtitle}</p>
+            <a className="site-footer-brand" href="#/">
+              Barış Restaurant
+            </a>
+            <p className="site-footer-description">
+              {text.footerDescription}
+            </p>
           </div>
 
-          <nav aria-label={text.menu}>
-            <a href="#/">{text.home}</a>
-            <a href="#/menu">{text.menu}</a>
-          </nav>
+          <div>
+            <h2>{text.explore}</h2>
+            <nav aria-label={text.explore}>
+              {links.map((link) => (
+                <a key={link.href} href={link.href}>
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          <div>
+            <h2>{text.hours}</h2>
+            <p className="site-footer-hours">
+              {text.weekdays}: 12:00 – 22:00<br />
+              {text.weekend}: 12:00 – 23:00<br />
+              {text.sunday}: 12:00 – 21:00
+            </p>
+          </div>
         </div>
 
-        <div className="restaurant-footer-bottom">
+        <div className="site-footer-bottom">
           <p>
             © {new Date().getFullYear()} Barış Restaurant.
             {" "}{text.rights}

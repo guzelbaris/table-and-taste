@@ -84,17 +84,28 @@ const items = turkishMenu
       </div>
 
       <section
-        className="menu-products"
-        aria-label={currentCategory?.label[language]}
-      >
-        {items.map((item) => (
-          <MenuCard
+  className="menu-products"
+  aria-label={currentCategory?.label[language]}
+>
+  {[0, 1].map((column) => (
+    <div className="menu-product-column" key={column}>
+      {items.map((item, index) =>
+        index % 2 === column ? (
+          <div
+            className="menu-product-entry"
+            style={{ order: index }}
             key={item.id}
-            item={item}
-            language={language}
-          />
-        ))}
-      </section>
+          >
+            <MenuCard
+              item={item}
+              language={language}
+            />
+          </div>
+        ) : null,
+      )}
+    </div>
+  ))}
+</section>
 
       <p className="menu-demo-note">{text.note}</p>
     </main>

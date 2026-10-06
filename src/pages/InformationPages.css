@@ -1,0 +1,296 @@
+.info-page {
+  width: min(1160px, 100%);
+  margin-inline: auto;
+  padding: 48px 22px 80px;
+}
+
+.info-introduction {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+
+.info-introduction h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(42px, 8vw, 72px);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.info-introduction > p:last-child,
+.info-copy p,
+.info-card p {
+  color: #c9bdb6;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+.info-page h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.about-story {
+  display: grid;
+  align-items: center;
+  gap: 32px;
+}
+
+.about-image {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.about-signature {
+  display: inline-block;
+  margin-top: 16px;
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+  font-style: italic;
+}
+
+.about-values {
+  padding-top: 64px;
+}
+
+.about-values-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.info-card {
+  min-width: 0;
+  padding: 26px;
+  border: 1px solid #ffffff18;
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.info-card-number {
+  display: block;
+  margin-bottom: 24px;
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.info-card h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.info-ending {
+  margin-top: 64px;
+  padding-top: 48px;
+  border-top: 1px solid #ffffff18;
+  text-align: center;
+}
+
+.info-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.info-secondary-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.contact-layout,
+.contact-information {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+
+.contact-information h2,
+.contact-form h2 {
+  font-size: 25px;
+}
+
+.opening-hours {
+  margin-bottom: 0;
+}
+
+.opening-hours > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #ffffff12;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.opening-hours dt {
+  color: #c9bdb6;
+}
+
+.opening-hours dd {
+  flex-shrink: 0;
+  margin: 0;
+  color: #f5eee4;
+}
+
+.contact-form label {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  color: #e7dcd2;
+  font-size: 13px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #ffffff24;
+  border-radius: 8px;
+  background: #211317;
+  color: #f5eee4;
+  font: inherit;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.contact-submit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 24px;
+  padding: 15px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #241518;
+  font-weight: 700;
+}
+
+.contact-form .contact-demo-note {
+  font-size: 12px;
+}
+
+.contact-form .contact-result {
+  margin-bottom: 0;
+  padding: 14px;
+  border: 1px solid #a7c29455;
+  border-radius: 8px;
+  color: #d2e1c5;
+}
+
+/* Tamamlanmış ortak footer */
+
+.site-footer {
+  padding: 48px 22px 24px;
+  border-top: 1px solid #ffffff18;
+  background: #130c0e;
+  text-align: left;
+}
+
+.site-footer-content,
+.site-footer-bottom {
+  width: min(1116px, 100%);
+  margin-inline: auto;
+}
+
+.site-footer-content {
+  display: grid;
+  gap: 32px;
+}
+
+.site-footer-brand {
+  color: #f5eee4;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 26px;
+}
+
+.site-footer-description {
+  max-width: 350px;
+  color: #c9bdb6;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.site-footer h2 {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.site-footer nav {
+  display: grid;
+  gap: 4px;
+}
+
+.site-footer nav a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: #e7dcd2;
+  font-size: 13px;
+}
+
+.site-footer-hours {
+  margin: 0;
+  color: #c9bdb6;
+  font-size: 12px;
+  line-height: 2;
+}
+
+.site-footer-bottom {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #ffffff14;
+  color: #c9bdb6;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+@media (min-width: 768px) {
+  .info-page {
+    padding-inline: 36px;
+  }
+
+  .about-story {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  .about-image {
+    aspect-ratio: 4 / 5;
+  }
+
+  .about-values-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .contact-layout {
+    grid-template-columns: 1fr 1.2fr;
+    gap: 28px;
+  }
+
+  .site-footer-content {
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+  }
+}
