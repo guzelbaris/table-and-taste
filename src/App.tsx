@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { MenuPage } from "./pages/MenuPage";
+import { HomePage } from "./pages/HomePage";
 import "./App.css";
 
 function getPage() {
@@ -180,25 +181,7 @@ export default function App() {
       {page === "menu" ? (
         <MenuPage language={language} />
       ) : (
-        <main>
-          <section className="restaurant-home-hero">
-            <p className="eyebrow">{text.subtitle}</p>
-            <h1>{text.headline}</h1>
-            <p className="restaurant-home-description">
-              {text.description}
-            </p>
-
-            <a className="primary-button" href="#/menu">
-              {text.explore}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </section>
-
-          <section className="section information">
-            <h2>{text.storyTitle}</h2>
-            <p>{text.story}</p>
-          </section>
-        </main>
+        <HomePage language={language} />
       )}
 
       <footer className="restaurant-footer">
