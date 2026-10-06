@@ -4,26 +4,34 @@ import {
   turkishMenu,
 } from "../turkish-menu";
 import type { MenuCategory } from "../turkish-menu";
+import { MenuCard } from "../components/MenuCard";
+import { menuPresentation } from "../menu-presentation";
+import "./MenuPage.css";
 
 type MenuPageProps = {
   language: "en" | "tr";
 };
 
-export function MenuPage({ language }: MenuPageProps) {
+export function MenuPage({
+  language,
+}: MenuPageProps) {
   const [category, setCategory] =
     useState<MenuCategory>("starters");
 
-  const items = turkishMenu.filter(
-    (item) => item.category === category,
-  );
+  const variantOrder = {
+  pro: 0,
+  plus: 1,
+  standard: 2,
+};
 
-  const currency = new Intl.NumberFormat(
-    language === "en" ? "en-GB" : "tr-TR",
-    {
-      style: "currency",
-      currency: "GBP",
-    },
-  );
+const items = turkishMenu
+  .filter((item) => item.category === category)
+  .sort((a, b) => {
+    const aVariant = menuPresentation[a.id]?.variant ?? "standard";
+    const bVariant = menuPresentation[b.id]?.variant ?? "standard";
+
+    return variantOrder[aVariant] - variantOrder[bVariant];
+  });
 
   const text =
     language === "en"
@@ -31,22 +39,24 @@ export function MenuPage({ language }: MenuPageProps) {
           eyebrow: "FROM OUR KITCHEN",
           title: "Our menu",
           description:
-            "From vibrant meze to charcoal-grilled favourites, discover the flavours of our Turkish table.",
-          vegetarian: "Vegetarian",
-          note:
-            "Portfolio demonstration menu. Dishes and prices are illustrative.",
+            "Generous meze, charcoal-grilled favourites and something sweet to finish.",
           categories: "Menu categories",
+          note:
+            "Portfolio demonstration menu. Dishes, ingredients and prices are illustrative.",
         }
       : {
           eyebrow: "MUTFAĞIMIZDAN",
           title: "Menümüz",
           description:
-            "Renkli mezelerden kömür ateşinde pişen lezzetlere, Türk soframızın tatlarını keşfedin.",
-          vegetarian: "Vejetaryen",
-          note:
-            "Portföy için hazırlanmış örnek menüdür. Yemekler ve fiyatlar temsilidir.",
+            "Zengin mezeler, kömür ateşinden lezzetler ve tatlı bir kapanış.",
           categories: "Menü kategorileri",
+          note:
+            "Portföy için hazırlanmış örnek menüdür. Yemekler, içerikler ve fiyatlar temsilidir.",
         };
+
+  const currentCategory = menuCategories.find(
+    (item) => item.id === category,
+  );
 
   return (
     <main className="menu-page">
@@ -74,27 +84,15 @@ export function MenuPage({ language }: MenuPageProps) {
       </div>
 
       <section
-        className="restaurant-menu-grid"
-        aria-label={
-          menuCategories.find((item) => item.id === category)
-            ?.label[language]
-        }
+        className="menu-products"
+        aria-label={currentCategory?.label[language]}
       >
         {items.map((item) => (
-          <article className="restaurant-menu-item" key={item.id}>
-            <div className="restaurant-menu-item-heading">
-              <h2>{item.name[language]}</h2>
-              <span>{currency.format(item.price)}</span>
-            </div>
-
-            <p>{item.description[language]}</p>
-
-            {item.vegetarian && (
-              <span className="vegetarian-label">
-                {text.vegetarian}
-              </span>
-            )}
-          </article>
+          <MenuCard
+            key={item.id}
+            item={item}
+            language={language}
+          />
         ))}
       </section>
 

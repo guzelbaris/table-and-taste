@@ -1,0 +1,249 @@
+.menu-products {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.menu-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #ffffff16;
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.menu-card-body {
+  padding: 24px;
+}
+
+.menu-card-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+}
+
+.menu-card-heading h2 {
+  min-width: 0;
+  margin: 0;
+  color: #f5eee4;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.menu-card-price {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.menu-card-description {
+  margin: 16px 0;
+  color: #d6cec7;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.menu-card-ingredients {
+  margin: 20px 0;
+  padding-top: 18px;
+  border-top: 1px solid #ffffff14;
+}
+
+.menu-card-ingredients h3 {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.menu-card-ingredients ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-card-ingredients li {
+  padding: 7px 10px;
+  border: 1px solid #ffffff16;
+  border-radius: 6px;
+  background: #ffffff04;
+  color: #e0d7d0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Pro ve Plus aynı kart tasarımını kullanır. */
+
+.menu-card--pro,
+.menu-card--plus {
+  border-color: #e4b88b55;
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      #e4b88b0d,
+      transparent 65%
+    ),
+    var(--surface);
+}
+
+.menu-card-toggle,
+.menu-feature-header {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 22px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.menu-card-toggle {
+  cursor: pointer;
+}
+
+.menu-card-toggle:focus-visible {
+  outline-offset: -5px;
+}
+
+.menu-feature-summary {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  min-height: 120px;
+}
+
+.menu-feature-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100px;
+  aspect-ratio: 1;
+}
+
+.menu-feature-orbit {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed #e4b88b45;
+  border-radius: 50%;
+}
+
+.menu-feature-plate {
+  width: 92%;
+  height: 92%;
+  overflow: hidden;
+  border-radius: 50%;
+  filter: drop-shadow(0 8px 8px #0005);
+}
+
+.menu-feature-plate--rotating {
+  animation: menu-plate-spin 55s linear infinite;
+}
+
+.menu-feature-plate .restaurant-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.menu-feature-plate .image-placeholder > span {
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.menu-feature-copy {
+  min-width: 0;
+}
+
+.menu-feature-copy .menu-card-heading {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.menu-card-hint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  color: #c9bdb6;
+  font-size: 12px;
+}
+
+.menu-card-chevron {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border: 1px solid #e4b88b40;
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 18px;
+}
+
+.menu-feature-details {
+  margin-inline: 22px;
+  padding-bottom: 24px;
+  border-top: 1px solid #ffffff14;
+}
+
+.menu-card--pro .menu-feature-details:not([hidden]) {
+  animation: menu-details-enter 220ms ease-out;
+}
+
+@keyframes menu-plate-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes menu-details-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .menu-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .menu-feature-summary {
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 22px;
+    min-height: 140px;
+  }
+
+  .menu-feature-visual {
+    width: 120px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-feature-plate--rotating,
+  .menu-card--pro .menu-feature-details:not([hidden]) {
+    animation: none;
+  }
+}
